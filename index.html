@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +21,12 @@
     text-align: center;
     font-size: 24px;
     margin-top: 35vh;
+    cursor: pointer;
+  }
+
+  #hello small {
+    font-size: 14px;
+    opacity: 0.6;
   }
 
   #text {
@@ -31,10 +38,17 @@
 
 <body>
 
-<div id="hello">Hello Buddy</div>
+<div id="hello">
+  Hello Buddy<br>
+  <small>(click to continue)</small>
+</div>
+
 <div id="text"></div>
 
+<audio id="ambience" src="keyboard-typing-sound-effect-335503.mp3" loop></audio>
+
 <script>
+/* ================= TEXT ================= */
 const content = `Hey, I’m Aditya Singh — born in 2007 (the date doesn’t matter, the journey does).
 I’m currently pursuing pre-med, while also diving deep into coding and technology, because I believe curiosity across fields builds sharper perspectives and a stronger mind.
 
@@ -53,36 +67,16 @@ I don’t chase perfection anymore; I chase progress and peace.
 I believe in big dreams, quiet effort, and finding meaning even in random thoughts.
 Just a human — learning, leveling up, and enjoying the journey as it unfolds.`;
 
+/* ================ ELEMENTS ================ */
 const target = document.getElementById("text");
 const hello = document.getElementById("hello");
+const ambience = document.getElementById("ambience");
 
+/* ================ TYPING ================= */
 let index = 0;
 const speed = 45;
 
-/* 🔊 WEB AUDIO (NO GLITCH) */
-const AudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-let buffer = null;
-
-fetch("keyboard-typing-sound-effect-335503.mp3")
-  .then(res => res.arrayBuffer())
-  .then(data => AudioCtx.decodeAudioData(data))
-  .then(decoded => buffer = decoded);
-
-function playKeySound() {
-  if (!buffer) return;
-
-  const source = AudioCtx.createBufferSource();
-  const gain = AudioCtx.createGain();
-
-  gain.gain.value = 0.18; // fixed safe volume
-  source.buffer = buffer;
-
-  source.connect(gain);
-  gain.connect(AudioCtx.destination);
-
-  source.start(0);
-  source.stop(AudioCtx.currentTime + 0.035); // micro tap
-}
+ambience.volume = 0.15; // soft background ambience
 
 function autoScroll() {
   window.scrollTo({
@@ -93,26 +87,24 @@ function autoScroll() {
 
 function typeEffect() {
   if (index < content.length) {
-    const char = content[index];
-    target.innerHTML += char;
-
-    if (/[a-zA-Z0-9.,'’—]/.test(char)) {
-      playKeySound();
-    }
-
+    target.innerHTML += content.charAt(index);
     index++;
     autoScroll();
     setTimeout(typeEffect, speed);
+  } else {
+    // 🔇 stop ambience when typing ends
+    ambience.pause();
+    ambience.currentTime = 0;
   }
 }
 
-window.onload = () => {
-  setTimeout(() => {
-    hello.style.display = "none";
-    target.style.display = "block";
-    AudioCtx.resume();
-    typeEffect();
-  }, 2500);
+/* ============== START FLOW ================ */
+hello.onclick = () => {
+  hello.style.display = "none";
+  target.style.display = "block";
+
+  ambience.play().catch(() => {});
+  typeEffect();
 };
 </script>
 
