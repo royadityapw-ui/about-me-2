@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Aditya Singh</title>
+
+<style>
+  body {
+    background: #ffffff;
+    color: #000000;
+    font-family: monospace;
+    font-size: 18px;
+    line-height: 1.7;
+    padding: 40px;
+    font-weight: 600; /* thoda bold */
+  }
+
+  #hello {
+    text-align: center;
+    font-size: 22px;
+    margin-top: 20vh;
+  }
+
+  #text {
+    display: none;
+    white-space: pre-line;
+  }
+</style>
+</head>
+
+<body>
+
+<div id="hello">Hello Buddy</div>
+<div id="text"></div>
+
+<audio id="typeSound" src="keyboard-typing-sound-effect-335503.mp3"></audio>
+
+<script>
+  const content = `Hey, I’m Aditya Singh — born in 2007 (the date doesn’t matter, the journey does).
+I’m currently pursuing pre-med, while also diving deep into coding and technology, because I believe curiosity across fields builds sharper perspectives and a stronger mind.
+
+I’m ambitious — but I’ll admit, lazy on some days. The gym plan from 2022 is still waiting its moment, but growth isn’t always about muscle — sometimes it’s mental, emotional, and unseen.
+
+Somewhere between logic and emotion — that’s where I exist.
+Not in a rush to impress — just focused on building something real.
+I’m good at heart, and I admit I have flaws, but none that harm others.
+I’m aware of my boundaries — and I respect them.
+
+I’m trying to learn everything, to build something big (can’t describe it yet — it’s still top secret 👀), and to stay focused on becoming a better version of myself every day.
+
+Life hasn’t been simple, but I’ve learned to take it one step at a time — growing, improving, and staying grounded.
+I don’t chase perfection anymore; I chase progress and peace.
+
+I believe in big dreams, quiet effort, and finding meaning even in random thoughts.
+Just a human — learning, leveling up, and enjoying the journey as it unfolds.`;
+
+  const target = document.getElementById("text");
+  const hello = document.getElementById("hello");
+  const sound = document.getElementById("typeSound");
+
+  let index = 0;
+  const speed = 45;
+
+  sound.volume = 0.2;
+
+  function typeEffect() {
+    if (index < content.length) {
+      const char = content.charAt(index);
+      target.innerHTML += char;
+
+      // sound ONLY for actual letters
+      if (char !== " " && char !== "\n") {
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+      }
+
+      index++;
+      setTimeout(typeEffect, speed);
+    }
+  }
+
+  // FLOW
+  window.onload = () => {
+    setTimeout(() => {
+      hello.style.display = "none";
+      target.style.display = "block";
+      typeEffect();
+    }, 2500);
+  };
+</script>
+
+</body>
+</html>
